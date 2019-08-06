@@ -4,6 +4,7 @@ import 'package:racing/src/provider/user.dart';
 import 'package:racing/src/ui/basePages.dart';
 
 import 'constants/appTheme.dart';
+// import 'models/quiz.dart';
 
 class App extends StatelessWidget {
   @override
@@ -11,6 +12,7 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<UserService>(builder: (_) => UserService()),
+        // StreamProvider<List<QuizModel>>.value(value: QuestionsService().loadQuestions()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
