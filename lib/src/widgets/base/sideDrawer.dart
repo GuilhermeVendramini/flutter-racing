@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:racing/src/provider/user.dart';
+import 'package:racing/src/controllers/googleSignIn.dart';
 
 Widget buildSideDrawer(BuildContext context) {
   final _user = Provider.of<UserService>(context);

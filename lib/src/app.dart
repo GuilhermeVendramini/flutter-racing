@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:racing/src/provider/user.dart';
+import 'package:racing/src/controllers/googleSignIn.dart';
+import 'package:racing/src/controllers/quiz.dart';
 import 'package:racing/src/ui/basePages.dart';
 
 import 'constants/appTheme.dart';
-// import 'models/quiz.dart';
+// import 'models/question.dart';
 
 class App extends StatelessWidget {
   @override
@@ -12,7 +13,8 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<UserService>(builder: (_) => UserService()),
-        // StreamProvider<List<QuizModel>>.value(value: QuestionsService().loadQuestions()),
+        ChangeNotifierProvider<QuizService>(builder: (_) => QuizService()),
+        // StreamProvider<List<QuestionModel>>.value(value: QuestionsService().loadQuestions()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

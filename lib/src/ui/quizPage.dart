@@ -5,7 +5,7 @@ import 'package:countdown/countdown.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:racing/src/data/questions.dart';
-import 'package:racing/src/models/quiz.dart';
+import 'package:racing/src/models/question.dart';
 import 'package:racing/src/widgets/base/appBar.dart';
 import 'package:racing/src/widgets/quiz/backgroundImage.dart';
 import 'package:racing/src/widgets/quiz/questions.dart';
@@ -100,7 +100,7 @@ class _QuizPageScreenState extends State<QuizPageScreen> {
   }
 
   Widget _questions() {
-    return StreamProvider<List<QuizModel>>.value(
+    return StreamProvider<List<QuestionModel>>.value(
       value: QuestionsService().loadQuestions(),
       initialData: [],
       child: QuestionsBox(),

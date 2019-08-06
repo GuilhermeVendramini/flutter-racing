@@ -1,23 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class QuizModel {
+class QuestionModel {
   final int id;
   final String title;
   final int stage;
   final String tips;
 
-  QuizModel({
+  QuestionModel({
     @required this.id,
     @required this.title,
     @required this.stage,
     @required this.tips,
   });
 
-  factory QuizModel.fromMap(Map data) {
+  factory QuestionModel.fromMap(Map data) {
     data = data ?? {};
 
-    return QuizModel(
+    return QuestionModel(
       id: data['id'],
       title: data['title'],
       stage: data['stage'],
@@ -25,10 +25,10 @@ class QuizModel {
     );
   }
 
-  factory QuizModel.fromFirestore(DocumentSnapshot doc) {
+  factory QuestionModel.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
 
-    return QuizModel(
+    return QuestionModel(
       id: data['id'],
       title: data['title'],
       stage: data['stage'],

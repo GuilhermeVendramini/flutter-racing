@@ -2,7 +2,7 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:racing/src/constants/appColors.dart';
-import 'package:racing/src/provider/user.dart';
+import 'package:racing/src/controllers/googleSignIn.dart';
 import 'package:racing/src/ui/cleanPage.dart';
 import 'package:racing/src/ui/homePage.dart';
 import 'package:racing/src/ui/quizStart.dart';
