@@ -19,4 +19,12 @@ class UserService extends GoogleLogin {
     user = googleSignIn.currentUser;
     notifyListeners();
   }
+
+  Future<Null> logout() async {
+    if (user != null) {
+      await googleSignIn.signOut();
+      user = null;
+      notifyListeners();
+    }
+  }
 }

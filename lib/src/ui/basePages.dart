@@ -7,6 +7,7 @@ import 'package:racing/src/ui/cleanPage.dart';
 import 'package:racing/src/ui/homePage.dart';
 import 'package:racing/src/ui/quizStart.dart';
 import 'package:racing/src/widgets/base/appBar.dart';
+import 'package:racing/src/widgets/base/sideDrawer.dart';
 
 class BaseScreen extends StatefulWidget {
   @override
@@ -42,10 +43,9 @@ class _BaseScreenState extends State<BaseScreen>
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserService>(context);
-    print(user.getCurrentUser());
-    if (user.getCurrentUser() == null) {
-      user.login();
+    final _user = Provider.of<UserService>(context);
+    if (_user.getCurrentUser() == null) {
+      _user.login();
       return CleanPageScreen();
     }
 
@@ -58,6 +58,7 @@ class _BaseScreenState extends State<BaseScreen>
           length: 5,
           child: Scaffold(
             appBar: buildDefaultAppBar(context),
+            drawer: buildSideDrawer(context),
             body: TabBarView(
               physics:
                   _scrollTab ? ScrollPhysics() : NeverScrollableScrollPhysics(),
