@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:racing/src/data/quizDataService.dart';
+import 'package:racing/src/models/question.dart';
+import 'package:racing/src/models/quiz.dart';
 
 class _QuizController with ChangeNotifier {
   int _currentQuestion = 0;
   int _quizLength;
+  UserQuizModel _quiz;
+  List<Map<String, dynamic>> _answers = [];
 }
 
 class Quiz extends _QuizController {
@@ -12,6 +17,10 @@ class Quiz extends _QuizController {
 
   int getQuizLength() {
     return _quizLength;
+  }
+
+  UserQuizModel getUserQuiz() {
+    return _quiz;
   }
 }
 
@@ -23,5 +32,30 @@ class QuizService extends Quiz {
 
   void setQuizLength(int length) {
     _quizLength = length;
+  }
+
+  void quizForward(
+      {QuestionModel question,
+      int currentQuestion,
+      String userId,
+      dynamic answer}) {
+    _currentQuestion = currentQuestion + 1;
+    _answers.add({question.id.toString(): answer});
+    print(_answers.toList());
+    _quiz = UserQuizModel(
+      stageId: question.stageId,
+      userId: userId,
+      time: '500',
+      answers: _answers,
+    );
+    notifyListeners();
+  }
+
+  void saveUserQuiz() {
+    QuizDataService().saveUserQuiz(_quiz);
+    _currentQuestion = 0;
+    _quizLength = null;
+    _quiz = null;
+    _answers = [];
   }
 }

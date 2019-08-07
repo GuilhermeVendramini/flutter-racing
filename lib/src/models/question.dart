@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 class QuestionModel {
   final int id;
   final String title;
-  final int stage;
+  final int stageId;
   final String tips;
 
   QuestionModel({
     @required this.id,
     @required this.title,
-    @required this.stage,
+    @required this.stageId,
     @required this.tips,
   });
 
@@ -20,7 +20,7 @@ class QuestionModel {
     return QuestionModel(
       id: data['id'],
       title: data['title'],
-      stage: data['stage'],
+      stageId: data['stageId'],
       tips: data['tips'],
     );
   }
@@ -31,7 +31,7 @@ class QuestionModel {
     return QuestionModel(
       id: data['id'],
       title: data['title'],
-      stage: data['stage'],
+      stageId: data['stageId'],
       tips: data['tips'],
     );
   }

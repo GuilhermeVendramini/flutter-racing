@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:racing/src/constants/appColors.dart';
+import 'package:racing/src/controllers/googleSignIn.dart';
 import 'package:racing/src/controllers/quiz.dart';
 import 'package:racing/src/models/question.dart';
 
@@ -14,6 +15,7 @@ class _QuestionsBoxState extends State<QuestionsBox>
   Animation<double> _animationFade;
   AnimationController _animationController;
   int _currentQuestion;
+  final _answerController = TextEditingController();
 
   @override
   void initState() {
@@ -28,6 +30,7 @@ class _QuestionsBoxState extends State<QuestionsBox>
   @override
   void dispose() {
     _animationController.dispose();
+    _answerController.dispose();
     super.dispose();
   }
 
@@ -69,6 +72,7 @@ class _QuestionsBoxState extends State<QuestionsBox>
         Text('${question.tips}'),
         Divider(),
         TextField(
+          controller: _answerController,
           textAlign: TextAlign.center,
           decoration: InputDecoration(
             labelText: 'DIGITE AQUI',
@@ -77,14 +81,16 @@ class _QuestionsBoxState extends State<QuestionsBox>
         SizedBox(
           height: 30.0,
         ),
-        _buttons(),
+        _buttons(question),
       ],
     );
   }
 
-  Widget _buttons() {
-    final _quizService = Provider.of<QuizService>(context);
-    int _quizLength = _quizService.getQuizLength();
+  Widget _buttons(QuestionModel question) {
+    final _user = Provider.of<UserService>(context);
+    final QuizService _quizService = Provider.of<QuizService>(context);
+    final int _quizLength = _quizService.getQuizLength();
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
@@ -98,9 +104,12 @@ class _QuestionsBoxState extends State<QuestionsBox>
         ),
         RaisedButton(
           onPressed: () {
-            _quizLength == _currentQuestion
-                ? _quizService.setCurrentQuestion(0)
-                : _quizService.setCurrentQuestion(_currentQuestion + 1);
+            _quizForward(
+              quizService: _quizService,
+              question: question,
+              user: _user,
+              finish: _quizLength == _currentQuestion,
+            );
           },
           child: _quizLength == _currentQuestion
               ? Text('FINALIZAR')
@@ -110,5 +119,24 @@ class _QuestionsBoxState extends State<QuestionsBox>
         ),
       ],
     );
+  }
+
+  void _quizForward(
+      {QuizService quizService,
+      QuestionModel question,
+      UserService user,
+      bool finish}) {
+    quizService.quizForward(
+      question: question,
+      currentQuestion: _currentQuestion,
+      userId: user.getCurrentUser().id,
+      answer: _answerController.text,
+    );
+    _answerController.clear();
+
+    if (finish) {
+      quizService.saveUserQuiz();
+      Navigator.pop(context);
+    }
   }
 }
