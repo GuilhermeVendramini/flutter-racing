@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:racing/src/controllers/googleSignIn.dart';
-import 'package:racing/src/controllers/quiz.dart';
+import 'package:racing/src/services/googleSignIn.dart';
+import 'package:racing/src/services/quiz.dart';
 import 'package:racing/src/ui/basePages.dart';
 
 import 'constants/appTheme.dart';

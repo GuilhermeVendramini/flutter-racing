@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:racing/src/constants/appColors.dart';
-import 'package:racing/src/controllers/googleSignIn.dart';
 import 'package:racing/src/controllers/quiz.dart';
 import 'package:racing/src/models/question.dart';
+import 'package:racing/src/services/googleSignIn.dart';
+import 'package:racing/src/services/quiz.dart';
 
 class QuestionsBox extends StatefulWidget {
   @override
@@ -15,7 +16,7 @@ class _QuestionsBoxState extends State<QuestionsBox>
   Animation<double> _animationFade;
   AnimationController _animationController;
   int _currentQuestion;
-  final _answerController = TextEditingController();
+  final TextEditingController _answerController = TextEditingController();
 
   @override
   void initState() {
@@ -104,11 +105,14 @@ class _QuestionsBoxState extends State<QuestionsBox>
         ),
         RaisedButton(
           onPressed: () {
-            _quizForward(
+            QuizController().quizForward(
               quizService: _quizService,
               question: question,
               user: _user,
               finish: _quizLength == _currentQuestion,
+              currentQuestion: _currentQuestion,
+              answerController: _answerController,
+              context: context,
             );
           },
           child: _quizLength == _currentQuestion
@@ -119,24 +123,5 @@ class _QuestionsBoxState extends State<QuestionsBox>
         ),
       ],
     );
-  }
-
-  void _quizForward(
-      {QuizService quizService,
-      QuestionModel question,
-      UserService user,
-      bool finish}) {
-    quizService.quizForward(
-      question: question,
-      currentQuestion: _currentQuestion,
-      userId: user.getCurrentUser().id,
-      answer: _answerController.text,
-    );
-    _answerController.clear();
-
-    if (finish) {
-      quizService.saveUserQuiz();
-      Navigator.pop(context);
-    }
   }
 }

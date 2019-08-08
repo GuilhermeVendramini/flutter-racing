@@ -1,61 +1,66 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:racing/src/data/quizDataService.dart';
 import 'package:racing/src/models/question.dart';
-import 'package:racing/src/models/quiz.dart';
+import 'package:racing/src/models/result.dart';
+import 'package:racing/src/services/googleSignIn.dart';
+import 'package:racing/src/services/quiz.dart';
+import 'package:racing/src/ui/resultPage.dart';
 
-class _QuizController with ChangeNotifier {
-  int _currentQuestion = 0;
-  int _quizLength;
-  UserQuizModel _quiz;
-  List<Map<String, dynamic>> _answers = [];
-}
-
-class Quiz extends _QuizController {
-  int getCurrentQuestion() {
-    return _currentQuestion;
-  }
-
-  int getQuizLength() {
-    return _quizLength;
-  }
-
-  UserQuizModel getUserQuiz() {
-    return _quiz;
-  }
-}
-
-class QuizService extends Quiz {
-  void setCurrentQuestion(int index) {
-    _currentQuestion = index;
-    notifyListeners();
-  }
-
-  void setQuizLength(int length) {
-    _quizLength = length;
-  }
-
-  void quizForward(
-      {QuestionModel question,
-      int currentQuestion,
-      String userId,
-      dynamic answer}) {
-    _currentQuestion = currentQuestion + 1;
-    _answers.add({question.id.toString(): answer});
-    print(_answers.toList());
-    _quiz = UserQuizModel(
-      stageId: question.stageId,
-      userId: userId,
-      time: '500',
-      answers: _answers,
+class QuizController {
+  void quizForward({
+    QuizService quizService,
+    QuestionModel question,
+    UserService user,
+    bool finish,
+    BuildContext context,
+    int currentQuestion,
+    TextEditingController answerController,
+  }) {
+    quizService.quizForward(
+      question: question,
+      currentQuestion: currentQuestion,
+      userId: user.getCurrentUser().id,
+      answer: answerController.text,
     );
-    notifyListeners();
+    answerController.clear();
+
+    if (finish) {
+      quizService.saveUserQuiz();
+      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ResultPageScreen(),
+        ),
+      );
+    }
   }
 
-  void saveUserQuiz() {
-    QuizDataService().saveUserQuiz(_quiz);
-    _currentQuestion = 0;
-    _quizLength = null;
-    _quiz = null;
-    _answers = [];
+  Future<List<QuizResultModel>> getUserQuizResult(
+      {String userId, int stageId}) async {
+    List<QuizResultModel> _userQuizResult = [];
+    final QuizDataService _quizDataService = QuizDataService();
+    final QuerySnapshot _userQuiz = await _quizDataService.loadUserQuiz(
+      userId: userId,
+      stageId: stageId,
+    );
+
+    final List<dynamic> _answers = _userQuiz.documents.first.data['answers'];
+    QuerySnapshot _questions = await _quizDataService.loadQuestions();
+    List<DocumentSnapshot> _documentData = _questions.documents;
+
+    _answers.forEach((answer) async {
+      Map<String, dynamic> _questionData = _documentData
+          .firstWhere((q) => q['id'] == int.parse(answer.keys.first))
+          .data;
+      _userQuizResult.add(QuizResultModel(
+        title: _questionData['title'],
+        correctAnswer: _questionData['answer'] == answer.values.first,
+        userAnswer: answer.values.first,
+      ));
+    });
+
+    return _userQuizResult;
   }
 }

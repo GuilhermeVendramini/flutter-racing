@@ -101,7 +101,7 @@ class _QuizPageScreenState extends State<QuizPageScreen> {
 
   Widget _questions() {
     return StreamProvider<List<QuestionModel>>.value(
-      value: QuizDataService().loadQuestions(),
+      value: QuizDataService().loadStreamQuestions(),
       initialData: [],
       child: QuestionsBox(),
     );

@@ -4,6 +4,7 @@ import 'package:racing/src/constants/appColors.dart';
 final ThemeData themeData = ThemeData(
   brightness: Brightness.dark,
   scaffoldBackgroundColor: AppColors.black,
+  accentColor: AppColors.blue,
   appBarTheme: AppBarTheme(
     color: AppColors.black,
   ),

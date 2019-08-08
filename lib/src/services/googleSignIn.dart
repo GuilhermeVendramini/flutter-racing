@@ -2,13 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class _GoogleSignInController with ChangeNotifier {
+class _GoogleSignInServiceBase with ChangeNotifier {
   final _googleSignIn = GoogleSignIn();
   final _auth = FirebaseAuth.instance;
   GoogleSignInAccount _user;
 }
 
-class GoogleLogin extends _GoogleSignInController {
+class GoogleLogin extends _GoogleSignInServiceBase {
   GoogleSignInAccount getCurrentUser() {
     return _user;
   }
